@@ -13,6 +13,7 @@ import Image from 'next/image'; // next/image for optimized images
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { formatDistanceToNowStrict } from 'date-fns';
+import { useToast } from '@/hooks/use-toast';
 
 
 // Mock Feed Data
@@ -59,16 +60,17 @@ interface CreatePostCardProps {
 
 const CreatePostCard: React.FC<CreatePostCardProps> = ({ user, onPost, postLimitReached }) => {
   const [caption, setCaption] = useState('');
+  const { toast } = useToast();
   // In a real app, handle file uploads
   // const [mediaFile, setMediaFile] = useState<File | null>(null);
 
   const handlePost = () => {
     if (postLimitReached) {
-        alert("You've reached your post limit for today."); // Replace with proper toast/notification
+        toast({ title: "Post Limit Reached", description: "You've reached your post limit for today.", variant: "destructive"});
         return;
     }
     if (!caption.trim()) {
-        alert("Caption cannot be empty."); // Replace with proper toast/notification
+        toast({ title: "Empty Caption", description: "Caption cannot be empty.", variant: "destructive" });
         return;
     }
     const newPost: FeedPost = {
@@ -84,6 +86,7 @@ const CreatePostCard: React.FC<CreatePostCardProps> = ({ user, onPost, postLimit
     };
     onPost(newPost);
     setCaption('');
+    toast({ title: "Post Created!", description: "Your post has been successfully shared."});
     // setMediaFile(null);
   };
 
