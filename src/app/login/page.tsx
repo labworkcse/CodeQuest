@@ -28,23 +28,22 @@ export default function LoginPage() {
       return;
     }
     setIsLoading(true);
-    // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1000));
     toast({
       title: 'Login Successful',
       description: 'Welcome back!',
     });
     setIsLoading(false);
-    // router.push('/'); // Example redirect
   };
 
   return (
-    <AppLayout>
-      <div className="flex justify-center items-center py-12">
+    <AppLayout hideSidebars={true}>
+      <div className="flex justify-center items-center py-12 min-h-[calc(100vh-15rem)]"> {/* Adjust min-height as needed */}
         <Card className="w-full max-w-md shadow-xl">
           <CardHeader className="text-center">
-            <CardTitle className="text-3xl font-headline flex items-center justify-center">
-              <LogIn className="mr-3 h-8 w-8 text-primary" /> Login
+            <LogIn className="mx-auto h-12 w-12 text-primary mb-4" />
+            <CardTitle className="text-3xl font-headline">
+              Login
             </CardTitle>
             <CardDescription>Access your CodeQuest account.</CardDescription>
           </CardHeader>
@@ -62,7 +61,7 @@ export default function LoginPage() {
                     onChange={(e) => setEmail(e.target.value)}
                     required
                     disabled={isLoading}
-                    className="pl-10"
+                    className="pl-10 h-10 border-input-border"
                   />
                 </div>
               </div>
@@ -78,13 +77,13 @@ export default function LoginPage() {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                     disabled={isLoading}
-                    className="pl-10"
+                    className="pl-10 h-10 border-input-border"
                   />
                 </div>
               </div>
             </CardContent>
             <CardFooter className="flex flex-col gap-4">
-              <Button type="submit" className="w-full" disabled={isLoading}>
+              <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground h-10" disabled={isLoading}>
                 {isLoading ? 'Logging in...' : 'Login'}
               </Button>
               <p className="text-sm text-center text-muted-foreground">

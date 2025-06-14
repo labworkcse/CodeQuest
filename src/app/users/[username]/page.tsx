@@ -16,8 +16,6 @@ interface UserProfilePageProps {
 }
 
 async function getUser(username: string): Promise<User | undefined> {
-  // Simulate fetching user. In a real app, this would be an API call.
-  // For now, we only have one placeholderUser. Let's return it if username matches.
   if (placeholderUser.username.toLowerCase() === username.toLowerCase()) {
     return placeholderUser;
   }
@@ -28,10 +26,9 @@ async function getUserQuestions(userId: string): Promise<Question[]> {
   return placeholderQuestions.filter(q => q.author.id === userId);
 }
 
-// Mock User Answers
 const mockUserAnswers: Partial<Question>[] = placeholderQuestions.slice(0,1).map(q => ({
     ...q, 
-    title: `Answer to: ${q.title}`, // Differentiate it's an answer
+    title: `Answer to: ${q.title}`,
     id: `ans-${q.id}`
 }));
 
@@ -41,11 +38,11 @@ export default async function UserProfilePage({ params }: UserProfilePageProps) 
 
   if (!user) {
     return (
-      <AppLayout>
+      <AppLayout hideSidebars={true}>
         <div className="text-center py-10">
           <h1 className="text-2xl font-semibold">User not found</h1>
           <p className="text-muted-foreground">The user profile you are looking for does not exist.</p>
-           <Button asChild className="mt-4">
+           <Button asChild className="mt-4 bg-primary text-primary-foreground hover:bg-primary/90">
             <Link href="/">Go Home</Link>
           </Button>
         </div>
@@ -54,25 +51,22 @@ export default async function UserProfilePage({ params }: UserProfilePageProps) 
   }
 
   const userQuestions = await getUserQuestions(user.id);
-  // In a real app, fetch user's answers, friends, etc.
-  const userAnswers = mockUserAnswers; // Using mock for now
-
+  const userAnswers = mockUserAnswers; 
   const authorInitial = user.username ? user.username.charAt(0).toUpperCase() : "U";
 
   return (
     <AppLayout>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Left Sidebar: User Info */}
-        <div className="md:col-span-1 space-y-6">
-          <Card className="shadow-lg">
+      <div className="md:flex md:space-x-6">
+        <div className="md:w-1/4 space-y-6 mb-6 md:mb-0">
+          <Card className="shadow-lg border-border">
             <CardHeader className="items-center text-center">
               <Avatar className="h-32 w-32 mb-4 border-4 border-primary shadow-md">
-                <AvatarImage src={user.avatarUrl} alt={user.username} data-ai-hint="profile avatar large" />
+                <AvatarImage src={user.avatarUrl} alt={user.username} data-ai-hint="profile avatar large"/>
                 <AvatarFallback className="text-4xl">{authorInitial}</AvatarFallback>
               </Avatar>
               <CardTitle className="text-3xl font-headline">{user.username}</CardTitle>
               <CardDescription className="text-primary">{user.reputation} Reputation</CardDescription>
-               <Button variant="outline" size="sm" className="mt-2">
+               <Button variant="outline" size="sm" className="mt-2 border-input-border">
                 <Edit3 className="mr-2 h-4 w-4" /> Edit Profile
               </Button>
             </CardHeader>
@@ -82,25 +76,25 @@ export default async function UserProfilePage({ params }: UserProfilePageProps) 
               <div className="space-y-2">
                 <div className="flex items-center">
                   <Briefcase className="h-4 w-4 mr-2 text-primary" />
-                  <span>Developer at Tech Solutions</span> {/* Placeholder */}
+                  <span>Developer at Tech Solutions</span> 
                 </div>
                 <div className="flex items-center">
                   <LinkIcon className="h-4 w-4 mr-2 text-primary" />
-                  <a href="#" className="text-blue-500 hover:underline">portfolio.example.com</a> {/* Placeholder */}
+                  <a href="#" className="text-blue-600 hover:underline">portfolio.example.com</a>
                 </div>
                 <div className="flex items-center">
                   <Mail className="h-4 w-4 mr-2 text-primary" />
-                  <a href={`mailto:${user.username.toLowerCase()}@example.com`} className="text-blue-500 hover:underline">
-                    {user.username.toLowerCase()}@example.com {/* Placeholder */}
+                  <a href={`mailto:${user.username.toLowerCase()}@example.com`} className="text-blue-600 hover:underline">
+                    {user.username.toLowerCase()}@example.com
                   </a>
                 </div>
               </div>
 
               <h3 className="font-semibold mt-6 mb-2 text-lg">Badges</h3>
               <div className="flex flex-wrap gap-2">
-                {user.badges.map(badge => (
-                  <Badge key={badge} variant="secondary" className="bg-accent/30 text-accent-foreground">
-                    <Star className="h-3 w-3 mr-1 text-yellow-500" /> {badge}
+                {user.badges.map(badgeText => (
+                  <Badge key={badgeText} variant="secondary" className="bg-yellow-100 text-yellow-700 border-yellow-300">
+                    <Star className="h-3 w-3 mr-1 text-yellow-500" /> {badgeText}
                   </Badge>
                 ))}
                 {user.badges.length === 0 && <p className="text-xs text-muted-foreground">No badges yet.</p>}
@@ -108,9 +102,9 @@ export default async function UserProfilePage({ params }: UserProfilePageProps) 
             </CardContent>
           </Card>
 
-          <Card className="shadow-lg">
+          <Card className="shadow-lg border-border">
             <CardHeader>
-              <CardTitle className="text-xl flex items-center">
+              <CardTitle className="text-xl flex items-center text-foreground">
                 <Users className="h-5 w-5 mr-2 text-primary" /> Friends ({user.friends.length})
               </CardTitle>
             </CardHeader>
@@ -123,32 +117,30 @@ export default async function UserProfilePage({ params }: UserProfilePageProps) 
                         <AvatarImage src={`https://placehold.co/40x40.png?text=${friendId.charAt(0)}`} data-ai-hint="friend avatar"/>
                         <AvatarFallback>{friendId.charAt(0).toUpperCase()}</AvatarFallback>
                       </Avatar>
-                      <Link href={`/users/${friendId.toLowerCase()}`} className="hover:text-primary">{friendId}</Link> {/* Placeholder link */}
+                      <Link href={`/users/${friendId.toLowerCase()}`} className="hover:text-primary">{friendId}</Link>
                     </li>
                   ))}
                 </ul>
               ) : (
                 <p className="text-xs text-muted-foreground">No friends yet.</p>
               )}
-               <Button variant="outline" size="sm" className="w-full mt-4">View All Friends</Button>
+               <Button variant="outline" size="sm" className="w-full mt-4 border-input-border">View All Friends</Button>
             </CardContent>
           </Card>
         </div>
 
-        {/* Right Content: Activity Tabs */}
-        <div className="md:col-span-2">
+        <div className="md:w-3/4">
           <Tabs defaultValue="questions" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 mb-4">
-              <TabsTrigger value="questions" className="flex items-center"><HelpCircle className="h-4 w-4 mr-1.5 hidden sm:inline"/> Questions</TabsTrigger>
-              <TabsTrigger value="answers" className="flex items-center"><Star className="h-4 w-4 mr-1.5 hidden sm:inline"/> Answers</TabsTrigger>
-              {/* Add more tabs like Feed Posts, Reputation, etc. later */}
-              <TabsTrigger value="activity" className="flex items-center"><Briefcase className="h-4 w-4 mr-1.5 hidden sm:inline"/> Activity</TabsTrigger>
-               <TabsTrigger value="bookmarks" className="flex items-center"><Briefcase className="h-4 w-4 mr-1.5 hidden sm:inline"/> Bookmarks</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 mb-4 bg-muted p-1 rounded-md">
+              <TabsTrigger value="questions" className="data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"><HelpCircle className="h-4 w-4 mr-1.5 hidden sm:inline"/> Questions</TabsTrigger>
+              <TabsTrigger value="answers" className="data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"><Star className="h-4 w-4 mr-1.5 hidden sm:inline"/> Answers</TabsTrigger>
+              <TabsTrigger value="activity" className="data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"><Briefcase className="h-4 w-4 mr-1.5 hidden sm:inline"/> Activity</TabsTrigger>
+               <TabsTrigger value="bookmarks" className="data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"><Briefcase className="h-4 w-4 mr-1.5 hidden sm:inline"/> Bookmarks</TabsTrigger>
             </TabsList>
             <TabsContent value="questions">
-              <Card className="shadow-lg">
+              <Card className="shadow-lg border-border">
                 <CardHeader>
-                  <CardTitle className="text-xl">Questions Posted ({userQuestions.length})</CardTitle>
+                  <CardTitle className="text-xl text-foreground">Questions Posted ({userQuestions.length})</CardTitle>
                 </CardHeader>
                 <CardContent>
                   {userQuestions.length > 0 ? <QuestionList questions={userQuestions} /> : <p className="text-muted-foreground">No questions posted yet.</p>}
@@ -156,9 +148,9 @@ export default async function UserProfilePage({ params }: UserProfilePageProps) 
               </Card>
             </TabsContent>
             <TabsContent value="answers">
-              <Card className="shadow-lg">
+              <Card className="shadow-lg border-border">
                 <CardHeader>
-                  <CardTitle className="text-xl">Answers Provided ({userAnswers.length})</CardTitle>
+                  <CardTitle className="text-xl text-foreground">Answers Provided ({userAnswers.length})</CardTitle>
                 </CardHeader>
                 <CardContent>
                   {userAnswers.length > 0 ? <QuestionList questions={userAnswers as Question[]} /> : <p className="text-muted-foreground">No answers provided yet.</p>}
@@ -166,14 +158,14 @@ export default async function UserProfilePage({ params }: UserProfilePageProps) 
               </Card>
             </TabsContent>
              <TabsContent value="activity">
-              <Card className="shadow-lg">
-                <CardHeader><CardTitle className="text-xl">Recent Activity</CardTitle></CardHeader>
+              <Card className="shadow-lg border-border">
+                <CardHeader><CardTitle className="text-xl text-foreground">Recent Activity</CardTitle></CardHeader>
                 <CardContent><p className="text-muted-foreground">Activity feed coming soon.</p></CardContent>
               </Card>
             </TabsContent>
             <TabsContent value="bookmarks">
-              <Card className="shadow-lg">
-                <CardHeader><CardTitle className="text-xl">Bookmarked Items</CardTitle></CardHeader>
+              <Card className="shadow-lg border-border">
+                <CardHeader><CardTitle className="text-xl text-foreground">Bookmarked Items</CardTitle></CardHeader>
                 <CardContent><p className="text-muted-foreground">Bookmarks coming soon.</p></CardContent>
               </Card>
             </TabsContent>

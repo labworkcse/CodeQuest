@@ -11,7 +11,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { PlusCircle, Tag as TagIcon, AlertTriangle } from 'lucide-react';
 
-// Basic client-side validation before actual form libraries like react-hook-form
 const validateQuestion = (title: string, body: string, tags: string) => {
   const errors: string[] = [];
   if (!title.trim()) errors.push("Title is required.");
@@ -29,14 +28,14 @@ const validateQuestion = (title: string, body: string, tags: string) => {
 export default function SubmitQuestionPage() {
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
-  const [tags, setTags] = useState(''); // Comma-separated tags
+  const [tags, setTags] = useState(''); 
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErrors([]); // Clear previous errors
+    setErrors([]); 
 
     const validationErrors = validateQuestion(title, body, tags);
     if (validationErrors.length > 0) {
@@ -46,7 +45,6 @@ export default function SubmitQuestionPage() {
     }
 
     setIsLoading(true);
-    // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1500));
     
     console.log('Submitting question:', { title, body, tags });
@@ -54,20 +52,18 @@ export default function SubmitQuestionPage() {
       title: 'Question Submitted!',
       description: 'Your question has been posted successfully.',
     });
-    // Reset form or redirect
     setTitle('');
     setBody('');
     setTags('');
     setIsLoading(false);
-    // router.push('/questions/newly-created-id'); // Example redirect
   };
 
   return (
     <AppLayout>
       <div className="max-w-3xl mx-auto">
-        <Card className="shadow-xl">
+        <Card className="shadow-xl border-border">
           <CardHeader>
-            <CardTitle className="text-3xl font-headline flex items-center">
+            <CardTitle className="text-3xl font-headline flex items-center text-foreground">
               <PlusCircle className="mr-3 h-8 w-8 text-primary" /> Ask a Public Question
             </CardTitle>
             <CardDescription>
@@ -100,6 +96,7 @@ export default function SubmitQuestionPage() {
                   disabled={isLoading}
                   required
                   minLength={15}
+                  className="h-10 border-input-border"
                   aria-describedby={errors.some(e => e.toLowerCase().includes('title')) ? "title-error" : undefined}
                 />
                 {errors.some(e => e.toLowerCase().includes('title')) && <p id="title-error" className="text-sm text-destructive mt-1">Title related error from list above.</p>}
@@ -119,6 +116,7 @@ export default function SubmitQuestionPage() {
                   disabled={isLoading}
                   required
                   minLength={30}
+                  className="border-input-border"
                   aria-describedby={errors.some(e => e.toLowerCase().includes('body')) ? "body-error" : undefined}
                 />
                  {errors.some(e => e.toLowerCase().includes('body')) && <p id="body-error" className="text-sm text-destructive mt-1">Body related error from list above.</p>}
@@ -136,7 +134,7 @@ export default function SubmitQuestionPage() {
                     value={tags}
                     onChange={(e) => setTags(e.target.value)}
                     placeholder="e.g., react, nextjs, typescript, authentication"
-                    className="pl-10"
+                    className="pl-10 h-10 border-input-border"
                     disabled={isLoading}
                     required
                     aria-describedby={errors.some(e => e.toLowerCase().includes('tag')) ? "tags-error" : undefined}
@@ -146,7 +144,7 @@ export default function SubmitQuestionPage() {
               </div>
             </CardContent>
             <CardFooter>
-              <Button type="submit" className="w-full sm:w-auto" disabled={isLoading}>
+              <Button type="submit" className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-primary-foreground h-10" disabled={isLoading}>
                 {isLoading ? 'Submitting...' : 'Post Your Question'}
               </Button>
             </CardFooter>

@@ -11,7 +11,8 @@ const QuestionList: React.FC<QuestionListProps> = ({ questions }) => {
   }
 
   return (
-    <div className="space-y-6">
+    // SO lists don't have space between items, they use borders
+    <div className="border-t border-border"> 
       {questions.map(question => (
         <QuestionItem key={question.id} question={question} />
       ))}

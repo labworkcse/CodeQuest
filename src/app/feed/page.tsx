@@ -1,5 +1,5 @@
 // src/app/feed/page.tsx
-'use client'; // Feed will likely be dynamic, so client component for now.
+'use client'; 
 
 import AppLayout from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
@@ -9,14 +9,13 @@ import { Textarea } from '@/components/ui/textarea';
 import { placeholderUser } from '@/lib/placeholder-data';
 import type { FeedPost } from '@/types';
 import { Heart, MessageCircle, Share2, Image as ImageIcon, Video, Send } from 'lucide-react';
-import Image from 'next/image'; // next/image for optimized images
+import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { formatDistanceToNowStrict } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
 
 
-// Mock Feed Data
 const mockFeedPosts: FeedPost[] = [
   {
     id: 'post1',
@@ -42,7 +41,7 @@ const mockFeedPosts: FeedPost[] = [
     id: 'post3',
     author: placeholderUser,
     caption: 'Working on a new video tutorial about Tailwind CSS. Coming soon! 🎬',
-    mediaUrl: 'https://placehold.co/600x338.png', // Placeholder for video thumbnail
+    mediaUrl: 'https://placehold.co/600x338.png', 
     mediaType: 'video',
     createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
     likes: 88,
@@ -61,8 +60,6 @@ interface CreatePostCardProps {
 const CreatePostCard: React.FC<CreatePostCardProps> = ({ user, onPost, postLimitReached }) => {
   const [caption, setCaption] = useState('');
   const { toast } = useToast();
-  // In a real app, handle file uploads
-  // const [mediaFile, setMediaFile] = useState<File | null>(null);
 
   const handlePost = () => {
     if (postLimitReached) {
@@ -77,8 +74,6 @@ const CreatePostCard: React.FC<CreatePostCardProps> = ({ user, onPost, postLimit
       id: `post-${Date.now()}`,
       author: user,
       caption,
-      // mediaUrl: mediaFile ? URL.createObjectURL(mediaFile) : undefined,
-      // mediaType: mediaFile?.type.startsWith('image') ? 'image' : (mediaFile?.type.startsWith('video') ? 'video' : undefined),
       createdAt: new Date().toISOString(),
       likes: 0,
       shares: 0,
@@ -87,7 +82,6 @@ const CreatePostCard: React.FC<CreatePostCardProps> = ({ user, onPost, postLimit
     onPost(newPost);
     setCaption('');
     toast({ title: "Post Created!", description: "Your post has been successfully shared."});
-    // setMediaFile(null);
   };
 
   return (
@@ -106,7 +100,7 @@ const CreatePostCard: React.FC<CreatePostCardProps> = ({ user, onPost, postLimit
             value={caption}
             onChange={(e) => setCaption(e.target.value)}
             rows={3}
-            className="flex-1"
+            className="flex-1 border-input-border"
             disabled={postLimitReached}
           />
         </div>
@@ -121,7 +115,7 @@ const CreatePostCard: React.FC<CreatePostCardProps> = ({ user, onPost, postLimit
             <Video className="h-5 w-5 text-blue-500" />
           </Button>
         </div>
-        <Button onClick={handlePost} disabled={!caption.trim() || postLimitReached}>
+        <Button onClick={handlePost} disabled={!caption.trim() || postLimitReached} className="bg-primary hover:bg-primary/90 text-primary-foreground">
           <Send className="mr-2 h-4 w-4" /> Post
         </Button>
       </CardFooter>
@@ -159,12 +153,11 @@ const FeedPostCard: React.FC<FeedPostCardProps> = ({ post }) => {
         {post.caption && <p className="mb-3 text-sm whitespace-pre-line">{post.caption}</p>}
         {post.mediaUrl && post.mediaType === 'image' && (
           <div className="rounded-md overflow-hidden border aspect-video relative bg-muted">
-            <Image src={post.mediaUrl} alt={`Post by ${post.author.username}`} layout="fill" objectFit="cover" data-ai-hint="social media" />
+            <Image src={post.mediaUrl} alt={`Post by ${post.author.username}`} layout="fill" objectFit="cover" data-ai-hint="social media content"/>
           </div>
         )}
         {post.mediaUrl && post.mediaType === 'video' && (
           <div className="rounded-md overflow-hidden border aspect-video relative bg-black flex items-center justify-center">
-            {/* Basic video placeholder */}
             <Video className="h-16 w-16 text-muted-foreground" />
             <p className="absolute bottom-2 left-2 text-xs bg-black/50 text-white px-1.5 py-0.5 rounded">Video Preview</p>
           </div>
@@ -188,22 +181,19 @@ const FeedPostCard: React.FC<FeedPostCardProps> = ({ post }) => {
 
 export default function FeedPage() {
   const [posts, setPosts] = useState<FeedPost[]>(mockFeedPosts);
-  const [currentUser, setCurrentUser] = useState(placeholderUser); // Mock current user
+  const [currentUser, setCurrentUser] = useState(placeholderUser);
   const [postLimitReached, setPostLimitReached] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    // Simulate fetching current user and their friend count
     const friendsCount = currentUser.friends.length;
     if (friendsCount === 0) {
-        // For demo, let's say they already posted once
-        // setPostLimitReached(userPostsToday >= 0); // This would be complex to track without a backend
+      // setPostLimitReached(userPostsToday >= 0); 
     } else if (friendsCount >= 1 && friendsCount <=2 ) {
-        // setPostLimitReached(userPostsToday >= 2);
+      // setPostLimitReached(userPostsToday >= 2);
     } else {
-        // friendsCount >= 10 implies unlimited, so never limit.
-        setPostLimitReached(false); 
+      setPostLimitReached(false); 
     }
   }, [currentUser]);
 
@@ -236,7 +226,7 @@ export default function FeedPage() {
   return (
     <AppLayout>
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-3xl font-bold font-headline text-primary mb-6">Public Feed</h1>
+        <h1 className="text-3xl font-bold font-headline text-foreground mb-6">Public Feed</h1>
         <CreatePostCard user={currentUser} onPost={handleNewPost} postLimitReached={postLimitReached}/>
         {posts.length > 0 ? (
           posts.map(post => <FeedPostCard key={post.id} post={post} />)

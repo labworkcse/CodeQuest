@@ -11,7 +11,6 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { UserPlus, User, Mail, Key, Phone, AlertTriangle } from 'lucide-react';
 
-// Basic client-side validation
 const validateSignup = (username: string, email: string, phone: string, password: string,confirmPassword: string ) => {
   const errors: string[] = [];
   if (!username.trim()) errors.push("Username is required.");
@@ -48,23 +47,22 @@ export default function SignupPage() {
     }
 
     setIsLoading(true);
-    // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1500));
     toast({
       title: 'Account Created!',
       description: 'Welcome to CodeQuest! Please login.',
     });
     setIsLoading(false);
-    // router.push('/login'); // Example redirect
   };
 
   return (
-    <AppLayout>
-      <div className="flex justify-center items-center py-12">
+    <AppLayout hideSidebars={true}>
+      <div className="flex justify-center items-center py-12 min-h-[calc(100vh-15rem)]">
         <Card className="w-full max-w-lg shadow-xl">
           <CardHeader className="text-center">
-            <CardTitle className="text-3xl font-headline flex items-center justify-center">
-              <UserPlus className="mr-3 h-8 w-8 text-primary" /> Create Account
+            <UserPlus className="mx-auto h-12 w-12 text-primary mb-4" />
+            <CardTitle className="text-3xl font-headline">
+              Create Account
             </CardTitle>
             <CardDescription>Join the CodeQuest community.</CardDescription>
           </CardHeader>
@@ -92,7 +90,7 @@ export default function SignupPage() {
                         placeholder="Your unique username"
                         required
                         disabled={isLoading}
-                        className="pl-10"
+                        className="pl-10 h-10 border-input-border"
                     />
                 </div>
               </div>
@@ -108,7 +106,7 @@ export default function SignupPage() {
                         onChange={(e) => setEmail(e.target.value)}
                         required
                         disabled={isLoading}
-                        className="pl-10"
+                        className="pl-10 h-10 border-input-border"
                     />
                 </div>
               </div>
@@ -124,7 +122,7 @@ export default function SignupPage() {
                         onChange={(e) => setPhone(e.target.value)}
                         required
                         disabled={isLoading}
-                        className="pl-10"
+                        className="pl-10 h-10 border-input-border"
                     />
                 </div>
               </div>
@@ -140,7 +138,7 @@ export default function SignupPage() {
                         onChange={(e) => setPassword(e.target.value)}
                         required
                         disabled={isLoading}
-                        className="pl-10"
+                        className="pl-10 h-10 border-input-border"
                     />
                 </div>
               </div>
@@ -156,13 +154,13 @@ export default function SignupPage() {
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         required
                         disabled={isLoading}
-                        className="pl-10"
+                        className="pl-10 h-10 border-input-border"
                     />
                 </div>
               </div>
             </CardContent>
             <CardFooter className="flex flex-col gap-4">
-              <Button type="submit" className="w-full" disabled={isLoading}>
+              <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground h-10" disabled={isLoading}>
                 {isLoading ? 'Creating Account...' : 'Sign Up'}
               </Button>
               <p className="text-sm text-center text-muted-foreground">
